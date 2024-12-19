@@ -10,7 +10,19 @@ This system provides token-based authentication for protecting routes in your ap
 * Node.js
 * Redis
 * MongoDB (as database)
+
+
 ## How to Run
+Add the .env file with contents (fill the variable contents):
+```
+LONG_TOKEN_SECRET=
+SHORT_TOKEN_SECRET=
+NACL_SECRET=
+MONGO_URI=
+REDIS_URI=
+```
+You may omit `MONGO_URI` or `REDIS_URI` for localhost. Make sure mongoDB and redis are installed and running though.
+
 To deploy this microservice, run:
 
 ```bash
