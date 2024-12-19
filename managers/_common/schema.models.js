@@ -17,11 +17,6 @@ module.exports = {
         type: 'string',
         length: {min: 8, max: 100},
     },
-    email: {
-        path: 'email',
-        type: 'string',
-        length: {min:3, max: 100},
-    },
     title: {
         path: 'title',
         type: 'string',
@@ -82,7 +77,9 @@ module.exports = {
         length: 13,
     },
     email: {
-        type: 'String',
+        type: 'string',
+        path: 'email',
+        length: {min:3, max: 100},
         regex: /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     },
     number: {
@@ -102,4 +99,41 @@ module.exports = {
     bool: {
         type: 'Boolean',
     },
+    name: {
+        path: 'name',
+        type: 'String',
+        length: { min: 2, max: 100 }
+    },
+    address: {
+        path: 'address',
+        type: 'String',
+        length: { min: 2, max: 300 }
+    },
+    description: {
+        path: 'description',
+        type: 'String',
+        length: { min: 1, max: 500 }
+    },
+    rollNumber: {
+        path: 'rollNumber',
+        type: 'String',
+        length: { min: '1', max: 100 }
+    },
+    userId: {
+        path: 'userId',
+        type: 'String'
+    },
+    schoolId: {
+        path:'schoolId',
+        type: 'String'
+    },
+    classroomId: {
+        path: 'classroomId',
+        type: 'String'
+    },
+    capacity: {
+        path: 'capacity',
+        type: 'Number',
+        length: {min: 1, max: 4}
+    }
 }

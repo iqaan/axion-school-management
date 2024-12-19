@@ -1,7 +1,9 @@
 const http              = require('http');
 const express           = require('express');
 const cors              = require('cors');
+const swaggerUI = require("swagger-ui-express");
 const app               = express();
+const yaml              = require('yamljs');
 
 module.exports = class UserServer {
     constructor({config, managers}){
@@ -29,6 +31,10 @@ module.exports = class UserServer {
         
         /** a single middleware to handle all */
         app.all('/api/:moduleName/:fnName', this.userApi.mw);
+        app.all('/api/:moduleName/:fnName/:id', this.userApi.mw);
+
+        const swaggerDocument = yaml.load('./swagger.yaml');
+        app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 
         let server = http.createServer(app);
         server.listen(this.config.dotEnv.USER_PORT, () => {

@@ -1,0 +1,594 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  description: API Documentation
+  version: 1.0.0
+servers:
+  - url: http://localhost:5111
+tags:
+  - name: Classroom
+  - name: Student
+  - name: User
+  - name: School
+paths:
+  /api/classroom/createClassroom:
+    post:
+      tags:
+        - Classroom
+      operationId: /api/classroom/createClassroom
+      summary: Create a new classroom
+      description: Create a new classroom. Accessible by school administrators.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - name
+                - capacity
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                capacity:
+                  type: integer
+      responses:
+        '201':
+          description: Classroom created successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /api/classroom/listAllClassrooms:
+    get:
+      tags:
+        - Classroom
+      operationId: /api/classroom/listAllClassrooms
+      summary: List all classrooms of a school
+      description: List all classrooms of a specific school with given school id. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: schoolId
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Classrooms listed successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Classroom'
+        '500':
+          description: Internal server error
+
+  /api/classroom/getClassroom:
+    get:
+      tags:
+        - Classroom
+      operationId: /api/classroom/getClassroom
+      summary: Get a classroom by id
+      description: Get a classroom by id. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Classroom retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Classroom'
+        '404':
+          description: Classroom not found
+        '500':
+          description: Internal server error
+
+  /api/classroom/updateClassroom:
+    patch:
+      tags:
+        - Classroom
+      operationId: /api/classroom/updateClassroom
+      summary: Update a classroom
+      description: Update a classroom. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                capacity:
+                  type: integer
+      responses:
+        '200':
+          description: Classroom updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Classroom not found
+        '500':
+          description: Internal server error
+
+  /api/classroom/deleteClassroom:
+    delete:
+      tags:
+        - Classroom
+      operationId: /api/classroom/deleteClassroom
+      summary: Delete a classroom
+      description: Delete a classroom. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Classroom deleted successfully
+        '404':
+          description: Classroom not found
+        '500':
+          description: Internal server error
+
+  /api/student/createStudent:
+    post:
+      tags:
+        - Student
+      operationId: /api/student/createStudent
+      summary: Create a new student
+      description: Create a new student. Accessible by school administrators.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - rollNumber
+                - username
+                - schoolId
+              properties:
+                rollNumber:
+                  type: string
+                username:
+                  type: string
+                schoolId:
+                  type: string
+      responses:
+        '201':
+          description: Student created successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /api/student/listAllStudents:
+    get:
+      tags:
+        - Student
+      operationId: /api/student/listAllStudents
+      summary: List all students
+      description: List all students (if either in whole school if classwoomId is omitted, or in a particular classroom). Accessible by school administrators.
+      parameters:
+        - in: query
+          name: schoolId
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: classroomId
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Students listed successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '500':
+          description: Internal server error
+
+  /api/student/getStudent:
+    get:
+      tags:
+        - Student
+      operationId: /api/student/getStudent
+      summary: Get a student by id
+      description: Get a student by id. Accessible by school administrators and the student.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Student retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '404':
+          description: Student not found
+        '500':
+          description: Internal server error
+
+  /api/student/updateStudent:
+    patch:
+      tags:
+        - Student
+      operationId: /api/student/updateStudent
+      summary: Update a student
+      description: Update a student. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                rollNumber:
+                  type: string
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Student updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Student not found
+        '500':
+          description: Internal server error
+
+  /api/student/enroll:
+    patch:
+      tags:
+        - Student
+      operationId: /api/student/enroll
+      summary: Enroll a student in a classroom
+      description: Enroll a student in a classroom. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - classroomId
+              properties:
+                classroomId:
+                  type: string
+      responses:
+        '200':
+          description: Student enrolled successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Student or classroom not found
+        '500':
+          description: Internal server error
+
+  /api/student/deroll:
+    patch:
+      tags:
+        - Student
+      operationId: /api/student/deroll
+      summary: Deroll a student from a classroom
+      description: Deroll a student from a classroom. Accessible by school administrators.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - classroomId
+              properties:
+                classroomId:
+                  type: string
+      responses:
+        '200':
+          description: Student derolled successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Student or classroom not found
+        '500':
+          description: Internal server error
+
+  /api/student/transfer:
+    patch:
+      tags:
+        - Student
+      operationId: /api/student/transfer
+      summary: Transfer a student to another school
+      description: Transfer a student to another school. Accessible by school administrators. School Admin should have access to both schools.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - schoolId
+                - id
+              properties:
+                schoolId:
+                  type: string
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Student transferred successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: Student or school not found
+        '500':
+          description: Internal server error
+
+  /api/user/createUser:
+    post:
+      tags:
+        - User
+      operationId: /api/user/createUser
+      summary: Create a new user
+      description: Create a new user.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - email
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /api/user/login:
+    post:
+      tags:
+        - User
+      operationId: /api/user/login
+      summary: Login a user
+      description: Login a user
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: User logged in successfully
+        '400':
+          description: Invalid request
+        '401':
+          description: Invalid username or password
+        '500':
+          description: Internal server error
+
+  /api/user/updateRoles:
+    patch:
+      tags:
+        - User
+      operationId: /api/user/updateRoles
+      summary: Update a user's roles
+      description: Update a user's roles. Accessible by super admin.
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                roles:
+                  type: string
+      responses:
+        '200':
+          description: User's roles updated successfully
+        '400':
+          description: Invalid request
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+
+  /api/school/createSchool:
+    post:
+      tags:
+        - School
+      operationId: /api/school/createSchool
+      summary: Create a new school
+      description: Create a new school. Accessible by super admin.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - name
+                - address
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+      responses:
+        '201':
+          description: School created successfully
+        '400':
+          description: Invalid request
+        '500':
+          description: Internal server error
+
+  /api/school/listAllSchools:
+    get:
+      tags:
+        - School
+      operationId: /api/school/listAllSchools
+      summary: List all schools
+      description: List all schools. Accessible by super admin.
+      responses:
+        '200':
+          description: Schools listed successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/School'
+        '500':
+          description: Internal server error
+
+  /api/school/getSchool:
+    get:
+      tags:
+        - School
+      operationId: /api/school/getSchool
+      summary: Get specific school
+      description: Get specific school. Accessible by super admin.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+      responses:
+        '200':
+          description: Schools listed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/School'
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Classroom:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        capacity:
+          type: integer
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+        rollNumber:
+          type: string
+        username:
+          type: string
+        schoolId:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+    School:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
